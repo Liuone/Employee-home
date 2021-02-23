@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etc.library.dao.LibraryMapper">
+    <!--hss-->
+    <select id="login" resultType="Admin">
+         select * from admin WHERE name = #{0} and password = #{1}
+    </select>
+    <select id="getBorrower" resultType="Borrower">
+         select * from borrower WHERE idcardnum = #{0}
+    </select>
+    <select id="getBook" resultType="Book">
+        select * from  book where  bookname = #{0}
+    </select>
+    <select id="getOne" resultType="Book">
+        select * from  book where booknumber = #{0}
+    </select>
+    <update id="updateBook">
+        update book set bookName=#{1}, author=#{2}, publisher=#{3}, bookType=#{4} where bookNumber = #{0}
+    </update>
+    <insert id="addBook" parameterType="Book">
+        insert into book(bookNumber,bookName,author,publisher,bookType)values(#{bookNumber},#{bookName},#{author},#{publisher},#{bookType})
+    </insert>
+    <delete id="delBook" parameterType="Integer">
+        delete  from book where bookNumber=#{bookNumber}
+    </delete>
+    <delete id="delTborrow" >
+        delete  from borrow where id=#{id}
+    </delete>
+    <delete id="delTborrow1" >
+        delete  from borrow where id=#{id}
+    </delete>
+    <delete id="delBorrower" >
+        delete  from borrower where idCardNum=#{idCardNum}
+    </delete>
+    <!--liuyi-->
+    <select id="getBorrow" resultType="Tborrow">
+        select * from borrow where id = #{0}
+    </select>
+    <select id="getBorrow1" resultType="Tborrow1">
+        select * from borrow where id = #{0}
+    </select>
+    <insert id="addBorrow">
+        insert  into borrow(borrowerId,bookNumber,bookName,borrowerName,returnDate,status)values (#{borrowerId},#{bookNumber},#{bookName},#{borrowerName},#{returnDate},#{status})
+    </insert>
+    <insert id="addBorrow1">
+        insert  into borrow(borrowerId,bookNumber,bookName,borrowerName,borrowedDate,status)values (#{borrowerId},#{bookNumber},#{bookName},#{borrowerName},#{borrowedDate},#{status})
+    </insert>
+    <insert id="addBorrower">
+         insert  into borrower(borrowerid,name,gender,idCardNum,workPlace,phone)values (#{borrowerid},#{name},#{gender},#{idCardNum},#{workPlace},#{phone})
+    </insert>
+</mapper>

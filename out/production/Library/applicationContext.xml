@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                     http://www.springframework.org/schema/context
+                     http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                     http://www.springframework.org/schema/aop
+                     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+                     http://www.springframework.org/schema/tx
+                     http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+    <!--因为我们需要使用注解来完成功能操作，所以依然需要进行包的扫描配置-->
+    <context:annotation-config />
+    <context:component-scan base-package="com.etc.library.service" />
+    <context:component-scan base-package="com.etc.library.serviceImpl"/>
+    <!--数据源的配置-->
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName"
+                  value="com.mysql.jdbc.Driver" />
+        <property name="url"
+                  value="jdbc:mysql://localhost:3306/library?characterEncoding=utf-8&amp;useSSL=false"/>
+        <property name="username" value="root" />
+        <property name="password" value="root" />
+    </bean>
+    <!--配置事务管理器，使管理器与以上的数据资源进行关联-->
+    <bean id="txManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <!--因为我们需要使用注解完成事务的操作，所以需要进行注解配置-->
+    <tx:annotation-driven
+            transaction-manager="txManager" />
+    <!--sqlSessionFactory的配置-->
+    <bean id="sqlSessionFactory"
+          class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:mybatis.xml" />
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <!--mapper接口的配置-->
+    <bean id="baseMapper"
+          class="org.mybatis.spring.mapper.MapperFactoryBean" abstract="true"
+          lazy-init="true">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+    <!--将mapper接口添加到容器中-->
+    <bean id="personMapper" parent="baseMapper">
+        <property name="mapperInterface" value="com.etc.library.dao.LibraryMapper"></property>
+    </bean>
+</beans>
